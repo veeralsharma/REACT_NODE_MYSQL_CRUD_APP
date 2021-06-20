@@ -1,0 +1,32 @@
+.Navbar-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.navbar-link{
+    color:#636C73 ;
+    font-size:calc(13px + 0.2vw);
+    font-weight: 700;
+    font-family: 'Poppins',sans-serif;
+    text-decoration: none;
+    flex: 1;
+    text-align: center;
+    border-bottom:1px solid #D8D8D8;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.navbar-link-active{
+    color:black ;
+    font-size:calc(13px + 0.2vw);
+    font-weight: 700;
+    font-family: 'Poppins',sans-serif;
+    text-decoration: none;
+    text-align: center;
+    border-bottom:1px solid #000000;
+    flex: 1;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+

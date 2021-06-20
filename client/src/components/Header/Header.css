@@ -1,0 +1,43 @@
+.header-div{
+    display: flex;
+    background-color: #FEFFFF;
+    width: 100vw;
+    height: 6vh;
+    position: fixed;
+    top: 0;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .header-logo-div{
+    justify-self: flex-start;
+    align-self: center;
+    margin-left: 3vw;
+  }
+  
+  .header-logo-text{
+    color: black;
+    font-family: 'Poppins',sans-serif;
+    font-weight: 800;
+    font-size: 2.3vh;
+  }
+  
+  .header-profile-div{
+    display: flex;
+    align-items: center;
+    margin-right: 3vw;
+  }
+  
+  .header-profile-avatar{
+    margin: 0 10px;
+    height: 4vh;
+    width: 1vw;
+  }
+  
+  .header-profile-text{
+    color: #344563;
+    font-family: 'Poppins',sans-serif;
+    font-weight: 600;
+    font-size: 1.4vh;
+  }
+  

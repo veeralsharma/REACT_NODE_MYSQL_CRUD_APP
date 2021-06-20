@@ -1,0 +1,18 @@
+body{
+  margin: 0;
+}
+
+.app{
+  background: #FAFAFB;
+  height: 100vh;
+}
+
+.app-body{
+  width: 86vw;
+  margin: 0 7vw;
+  padding-top: 10vh;
+}
+
+.text{
+  font-family: 'Poppins',sans-serif;
+}

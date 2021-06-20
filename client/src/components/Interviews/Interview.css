@@ -1,0 +1,18 @@
+.all-interviews{
+    margin: 10% 5%;
+    width: 90%
+}
+
+.create-interviews{
+    background-color: white;
+    border-radius: 24px;
+    margin: 10% 10%;
+    padding: 5%;
+    width: 70%;
+}
+
+
+
+.tablecell{
+    font-weight: 800;
+}
