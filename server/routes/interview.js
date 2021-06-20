@@ -160,6 +160,23 @@ module.exports = function (params) {
     });
   });
 
+  app.post("/delete/", async (req, res) => {
+    var sql = `DELETE from interview_list where interview_id = ${req.body.interview_id}`;
+    db.query(sql, async function (err, result) {
+      if (err) {
+        res.send({
+          status: 500,
+          message: err.message,
+        });
+      } else {
+        res.send({
+          status: 200,
+          message: "DELETED",
+        });
+      }
+    });
+  });
+
   app.get("/all", async (req, res) => {
     var date = Date.now();
     var current = dateFormat(date, "yyyy-mm-dd HH:MM:ss");
@@ -250,15 +267,11 @@ module.exports = function (params) {
       });
     } else {
       var interview_id = req.body.interview_id;
-      for (var i = 0; i < participants.length; i++) {
-        var check= await InterviewExist(participants[i], interview_id)
-        console.log("For "+participants[i]+" "+check);
-        if (!check) {
-          console.log("here");
+      try {
+        await deleteInterviews(interview_id)
+        for (var i = 0; i < participants.length; i++) {
           await createInterviewForParticipant(interview_id, participants[i]);
         }
-      }
-      try {
         await updateInterview(interview_id, start_date, end_date);
         res.send({
           status: 200,
@@ -427,6 +440,24 @@ module.exports = function (params) {
     var result = await fetch(`${globals.domainUrl}/user/get/email`, {
       method: "POST",
       body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        return json;
+      });
+    return result.message;
+  }
+
+  async function deleteInterviews(interview_id){
+    var itv = {
+      interview_id: interview_id,
+    };
+    var result = await fetch(`${globals.domainUrl}/interview/delete`, {
+      method: "POST",
+      body: JSON.stringify(itv),
       headers: {
         "Content-Type": "application/json",
       },
