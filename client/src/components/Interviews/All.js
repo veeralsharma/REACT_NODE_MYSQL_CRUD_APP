@@ -29,8 +29,9 @@ function All() {
  useEffect(() => {
     Api.get('/interview/all').then((res) => {
       setLoading(false)
-      console.log(res.data.message);
-      setState(res.data.message)
+      if(res.data.status == 200){
+        setState(res.data.message)
+      }      
     })
  },[])
 
@@ -59,7 +60,8 @@ function All() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {state.map((row) => (
+            {state.length > 0 ? (
+              state.map((row) => (
               <TableRow key={row.name}>
                 <TableCell component="th" scope="row">
                   {row.interview_id}
@@ -69,7 +71,8 @@ function All() {
                 <TableCell>{getString(row.participants)}</TableCell>
                 <TableCell><IconButton onClick={() => {window.location.href=`/edit/${row.interview_id}`}}><EditIcon /></IconButton></TableCell>
               </TableRow>
-            ))}
+            ))
+            ):(null)}
           </TableBody>
         </Table>
       </TableContainer>

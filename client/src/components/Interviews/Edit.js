@@ -43,8 +43,8 @@ function Edit() {
             setLoading(false)
             var data=res.data.message[0]
             console.log(data);
-            var sd=moment(data.start_date).format('YYYY-MM-DD HH:MM:ss');
-            var ed=moment(data.end_date).format('YYYY-MM-DD HH:MM:ss');
+            var sd=moment(data.start_date).format('YYYY-MM-DD hh:mm:ss');
+            var ed=moment(data.end_date).format('YYYY-MM-DD hh:mm:ss');
             setStartDate(moment(sd))
             setEndDate(moment(ed))
             var str=""
@@ -62,8 +62,8 @@ function Edit() {
               alert("Select Valid Start and End date")
               setLoading(false)
           }else{
-              var start_date=startDate.locale("en").add(1, "d").format("YYYY-MM-DD HH:MM:ss")
-              var end_date=endDate.locale("en").add(1, "d").format("YYYY-MM-DD HH:MM:ss")
+            var start_date=moment(startDate._d).format('YYYY-MM-DD hh:mm:ss')
+            var end_date=moment(endDate._d).format('YYYY-MM-DD hh:mm:ss')
               var participant_list=participants.split(",")
               if(participant_list.length<2){
                   alert("Minimum number of participatns should be 2")
@@ -76,8 +76,13 @@ function Edit() {
                       participants:participant_list
                   }
                   Api.put('/interview/edit',body).then((res) => {
-                    setLoading(false)
-                    window.location.href="/"
+                    if(res.data.status==200){
+                      setLoading(false)
+                      window.location.href="/"
+                    }else{
+                      alert(res.data.message)
+                      setLoading(false)
+                    }
                   })
               }
           }

@@ -13,10 +13,10 @@ module.exports = function (params) {
     var end_date = req.body.end_date;
     var participants = req.body.participants;
     console.log(req.body);
-    var check = await checkAvailability(start_date, participants);
+    var check = await checkAvailability(start_date, participants,end_date);
     if (!check) {
       res.send({
-        status: 200,
+        status:409,
         message: "Slots not available for selected participants",
       });
     } else {
@@ -41,12 +41,14 @@ module.exports = function (params) {
   app.post("/slot/exist", async (req, res) => {
     var start_date = req.body.start_date;
     var participant = req.body.participant;
+    var end_date = req.body.end_date
+    
     var sql = `SELECT * from interview_list JOIN interview ON interview_list.interview_id = interview.interview_id 
-    WHERE user_id = ${participant}  and start_date <= '${start_date}' and end_date >= '${start_date}' `;
+    WHERE (user_id = ${participant}  and start_date <= '${start_date}' and end_date >= '${start_date}') or (user_id = ${participant}  and start_date <= '${end_date}' and end_date >= '${end_date}') `;
     db.query(sql, function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -66,7 +68,7 @@ module.exports = function (params) {
     db.query(sql, function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -88,7 +90,7 @@ module.exports = function (params) {
     db.query(sql, function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -109,7 +111,7 @@ module.exports = function (params) {
     db.query(sql, function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -129,7 +131,7 @@ module.exports = function (params) {
     db.query(sql, function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -146,7 +148,7 @@ module.exports = function (params) {
     db.query(sql, async function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -164,15 +166,14 @@ module.exports = function (params) {
     var sql = `SELECT * from interview where start_date >= '${current}'`;
     db.query(sql, async function (err, result) {
       if (err) {
-        console.log(err);
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
         if (result.length == 0) {
           res.send({
-            status: 200,
+            status: 409,
             message: "no interviews exist",
           });
         } else {
@@ -204,7 +205,7 @@ module.exports = function (params) {
     db.query(sql, async function (err, result) {
       if (err) {
         res.send({
-          status: err.code,
+          status: 500,
           message: err.message,
         });
       } else {
@@ -240,11 +241,11 @@ module.exports = function (params) {
     var end_date = req.body.end_date;
     var participants = req.body.participants;
     console.log(req.body);
-    var check = await checkAvailability(start_date, participants);
+    var check = await checkAvailability(start_date, participants,end_date);
     console.log("Availability issue "+check);
     if (!check) {
       res.send({
-        status: 200,
+        status: 409,
         message: "Slots not available for selected participants",
       });
     } else {
@@ -260,7 +261,7 @@ module.exports = function (params) {
       try {
         await updateInterview(interview_id, start_date, end_date);
         res.send({
-          status: 204,
+          status: 200,
           message: "Update",
         });
       } catch (error) {
@@ -330,12 +331,12 @@ module.exports = function (params) {
     return result.message;
   }
 
-  async function checkAvailability(start_date, participants) {
+  async function checkAvailability(start_date, participants,end_date) {
     for (var i = 0; i < participants.length; i++) {
       var p = await getParticipant(participants[i]);
       if (p) {
         var pid = p.user_id;
-        var check = await slotExist(pid, start_date);
+        var check = await slotExist(pid, start_date,end_date);
         if (check == true) {
           return false;
         }
@@ -370,10 +371,11 @@ module.exports = function (params) {
     return result.message.length > 0 ? true : false;
   }
 
-  async function slotExist(participant, start_date) {
+  async function slotExist(participant, start_date, end_date) {
     var itv = {
       start_date: start_date,
       participant: participant,
+      end_date: end_date
     };
     var result = await fetch(`${globals.domainUrl}/interview/slot/exist`, {
       method: "POST",

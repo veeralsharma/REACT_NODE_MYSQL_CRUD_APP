@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Api from '../../Axios'
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   submit: {
@@ -41,8 +42,8 @@ function Create() {
             alert("Select Valid Start and End date")
             setLoading(false)
         }else{
-            var start_date=startDate.locale("en").add(1, "d").format("YYYY-MM-DD HH:MM:ss")
-            var end_date=endDate.locale("en").add(1, "d").format("YYYY-MM-DD HH:MM:ss")
+          var start_date=moment(startDate._d).format('YYYY-MM-DD hh:mm:ss')
+          var end_date=moment(endDate._d).format('YYYY-MM-DD hh:mm:ss')
             var participant_list=participants.split(",")
             if(participant_list.length<2){
                 alert("Minimum number of participatns should be 2")
@@ -54,8 +55,13 @@ function Create() {
                     participants:participant_list
                 }
                 Api.post('/interview/create',body).then((res) => {
-                  setLoading(false)
-                  window.location.href="/"
+                  if(res.data.status==200){
+                    setLoading(false)
+                    window.location.href="/"
+                  }else{
+                    alert(res.data.message)
+                    setLoading(false)
+                  }
                 })
             }
         }
@@ -89,11 +95,11 @@ function Create() {
           </Grid>
           <Grid item xs={12} sm={6}>
           Start Date Time
-            <Datetime value={startDate} onChange={(e) => setStartDate(e)} dateFormat="YYYY-MM-DD"  />
+            <Datetime value={startDate} onChange={(e) => setStartDate(e)}  />
           </Grid>
           <Grid item xs={12} sm={6}>
           End Date Time
-            <Datetime value={endDate} onChange={(e) => setEndDate(e) } dateFormat="YYYY-MM-DD"  />
+            <Datetime value={endDate} onChange={(e) => setEndDate(e) }  />
           </Grid>
         </Grid>
         <Button
