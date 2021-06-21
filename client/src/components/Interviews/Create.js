@@ -42,8 +42,8 @@ function Create() {
             alert("Select Valid Start and End date")
             setLoading(false)
         }else{
-          var start_date=moment(startDate._d).format('YYYY-MM-DD hh:mm:ss')
-          var end_date=moment(endDate._d).format('YYYY-MM-DD hh:mm:ss')
+          var start_date=moment(startDate._d).format('YYYY-MM-DD HH:mm:ss')
+          var end_date=moment(endDate._d).format('YYYY-MM-DD HH:mm:ss')
             var participant_list=participants.split(",")
             if(participant_list.length<2){
                 alert("Minimum number of participatns should be 2")
